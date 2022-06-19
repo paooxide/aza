@@ -1,8 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,8 +15,8 @@ async function bootstrap() {
   );
   app.setGlobalPrefix('api/v1');
   const config = new DocumentBuilder()
-    .setTitle('Aza Payment Server')
-    .setDescription('Aza Payment Server for recurrent payments')
+    .setTitle('Aza API server')
+    .setDescription('Aza API server documentation')
     .setVersion('1.0')
     .addTag('users')
     .addBearerAuth()
@@ -24,6 +24,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/v1/docs', app, document);
   app.use(helmet());
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3010);
 }
 bootstrap();
