@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  dev:
+    container_name: aza-server
+    image: aza-server-image:1.0.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - aza-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      REDIS_SERVER_URL: redis
+      REDIS_SERVER_PORT: 6379
+      DATABASE_URL:
+      POSTMARK_API_KEY:
+
+  redis:
+    image: 'bitnami/redis:6.2'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - aza-network
+
+networks:
+  aza-network:
