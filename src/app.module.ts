@@ -8,7 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ChainModule } from './key-chain/chain.module';
 import { UsersModule } from './users/users.module';
 
-Module({
+@Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
@@ -28,5 +28,5 @@ Module({
   ],
   controllers: [AppController],
   providers: [AppService],
-});
+})
 export class AppModule {}
