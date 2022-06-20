@@ -1,73 +1,142 @@
+# User Journey Diagram
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-user+journey+diagram.drawio.png" width="720" alt="User journey architecture" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+<p>
+The User can access the service by registering using their email address , creating a profile and then generating an API key and secret that will be used to submit transactions
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<p>
+To submit a transactions, the user make use of the generate API key and secret by adding it to the HTTP header of the request when calling the recurrent payment endpoint or simply by authenticating by login in and adding the Bearer Token generated to the HTTP header of the request
+</p>
 
-## Description
+# System Architecture
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+<p align="center">
+  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-system+architecture.drawio.png" width="920" alt="System architecture" /></a>
+</p>
 
-## Installation
+<p>
+The API uses REST architecture to transfer data to and from the client resource.
+The API request journeys throught a NAT API Gateway, to the load balancer that then routes the traffic to the ECS cluster.
+</p>
+<p>
+The ECS cluster comprises of fargat serverless resources from our docker images provided on the Elastic Container Registry.
+</p>
 
-```bash
-$ npm install
+<p>
+The deployed services uses MongoDB as a database , Elastic Cache as in memory datastore and AWS Cognito for authentication
+</p>
+
+### Authentication
+
+<ol>
+<li>
+  The user register by calling the request OTP endpoint and receives the OTP via their email address provided
+</li>
+<li>
+  The user verifies the OTP by calling the verify OTP endpoint and a HTTP 201 response is returned once the verification is successful
+</li>
+<li>
+  The user then calls the create user profile endpoint that sets their profile data and password
+</li>
+</ol>
+
+```js
+POST / api / v1 / auth / request - otp;
+POST / api / v1 / auth / verify - otp;
+POST / api / v1 / user;
 ```
 
-## Running the app
+### API Secret and Key
 
-```bash
-# development
-$ npm run start
+Post authentication
 
-# watch mode
-$ npm run start:dev
+<ol>
+<li>
+  To generate the API key and API secrete the user call the generate secret endpoint that returns the generated key and secret
+</li>
+<li>
+  To view all generated keys and secret, the user calls the view secret endpoint
+</li>
+<li>
+  The user can delete their secret by calling the delete secret endpoint
+</li>
+</ol>
 
-# production mode
-$ npm run start:prod
+```js
+GET / api / v1 / chain / generate - secret;
+GET / api / v1 / chain / view - secret;
+DELETE / api / v1 / chain / delete -secret;
 ```
 
-## Test
+### Submitting and viewing Transactions
+
+The user uses the API secret and key generated to call the endpoint to submit recurring payments. Or simply by authenticating by login in and adding the Bearer Token generated to the HTTP header of the request
+
+```js
+POST / api / v1 / transactions / create - transaction;
+
+POST / api / v1 / transactions / all;
+
+POST / api / v1 / transactions / { transactionId };
+```
+
+The secret and key is added by setting the HTTP Headers
+
+```js
+CLIENT_SECRET: XXXXXXXXXXXX;
+API_KEY: XXXXXXXXXXX;
+```
+
+## Scalability (Proposed)
+
+The system is deployed on AWS ECS cluster using AWS Fargate serverless resources that auto scales on demand
+
+# Description to run on your local machine
+
+To install and run locally make sure you have Docker and NodeJs installed in your local machine
+
+## To install Docker and nodeJS
+
+```bash
+# node
+$ brew install node
+
+# docker
+$ brew install docker
+```
+
+## Running the app locally
+
+Make sure you have your docker started up and running then run
+
+```bash
+$ docker-compose up
+```
+
+To view the Swagger API documentations visit the [localhost](http://127.0.0.1:3000/api/v1/docs) on
+
+> http://127.0.0.1:3000/api/v1/docs
+
+### Technical deployment Architecture
+
+<p align="center">
+  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-technical+system+arch.drawio.png" width="720" alt="Technical deployment architecture" /></a>
+</p>
+
+## To run tests on your local machine
+
+<br>
 
 ```bash
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 ## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Contact
+[Philip Adeoluwa](mailto:ogunye4pao@gmail.com)
