@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ChainModule } from './key-chain/chain.module';
+import { TransactionsModule } from './transactions/transactions.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { UsersModule } from './users/users.module';
     ChainModule,
     UsersModule,
     AuthModule,
+    TransactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
