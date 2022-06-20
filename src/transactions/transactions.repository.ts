@@ -42,9 +42,13 @@ export class TransactionsRepository {
     id: string,
     updateQuery?: UpdateQuery<Partial<TransactionsDocument>>,
   ): Promise<TransactionsDocument> {
-    return this.model.findOneAndUpdate({ id: id }, updateQuery, {
-      new: true,
-    });
+    return this.model.findOneAndUpdate(
+      { _id: new Types.ObjectId(id) },
+      updateQuery,
+      {
+        new: true,
+      },
+    );
   }
 
   public async delete(query: FilterQuery<TransactionsDocument>) {

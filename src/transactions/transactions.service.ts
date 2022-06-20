@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Types } from 'mongoose';
 import { CreateTransactionsDto } from './dto/create-transactions.dto';
 import { PaginationDTO } from './dto/pagination.dto';
@@ -32,5 +36,18 @@ export class TransactionsService {
       _id: new Types.ObjectId(transactionId),
     });
     return transaction;
+  }
+
+  async updateSingleTransaction(userId: string, transactionId: string, data) {
+    const transaction = await this.transactionsRepository.findOne({
+      _id: new Types.ObjectId(transactionId),
+    });
+    if (transaction.customerID.toString() !== userId) {
+      throw new UnauthorizedException('Invalid User');
+    }
+    if (!transaction) {
+      throw new NotFoundException('Transaction not found');
+    }
+    return this.transactionsRepository.updateOne(transactionId, data);
   }
 }

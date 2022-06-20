@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { AuthUser } from '../common/decorators/user.decorator';
 import { CreateTransactionsDto } from './dto/create-transactions.dto';
 import { PaginationDTO } from './dto/pagination.dto';
 import { TransactionssResponseDto } from './dto/transaction-response.dto';
+import { UpdateTransactionsDto } from './dto/update-transactions.dto';
 import { TransactionsService } from './transactions.service';
 
 @ApiTags('transactions')
@@ -57,5 +59,24 @@ export class TransactionsController {
     @Param('transactionid') transactionId: string,
   ) {
     return this.transactionsService.getSingleTransaction(transactionId);
+  }
+
+  @Put(':transactionid')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'list all transactions',
+    type: [TransactionssResponseDto],
+  })
+  async updateSingleTransaction(
+    @AuthUser() user,
+    @Param('transactionid') transactionId: string,
+    @Body() data: UpdateTransactionsDto,
+  ) {
+    return this.transactionsService.updateSingleTransaction(
+      user._id,
+      transactionId,
+      data,
+    );
   }
 }
