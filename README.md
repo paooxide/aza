@@ -1,7 +1,8 @@
 # User Journey Diagram
 
 <p align="center">
-  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-user+journey+diagram.drawio.png" width="720" alt="User journey architecture" /></a>
+  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-user+journey+diagram.drawio.png" width="720" alt="User journey architecture"><img src="https://folham.s3.us-east-2.amazonaws.com/system_architecture-user+journey+diagram.drawio.png" width="720" alt="Bits user journey architecture" /></a>
+  
 </p>
 
 <p>
@@ -14,7 +15,7 @@ To submit a transactions, the user make use of the generate API key and secret b
 # System Architecture
 
 <p align="center">
-  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-system+architecture.drawio.png" width="920" alt="System architecture" /></a>
+  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-system+architecture.drawio.png" width="920" alt="System architecture"><img src="https://folham.s3.us-east-2.amazonaws.com/system_architecture-system+architecture.drawio.png" width="920" alt="Bits test architecture" /></a>
 </p>
 
 <p>
@@ -123,7 +124,7 @@ To view the Swagger API documentations visit the [localhost](http://127.0.0.1:30
 ### Technical deployment Architecture
 
 <p align="center">
-  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-technical+system+arch.drawio.png" width="720" alt="Technical deployment architecture" /></a>
+  <a href="https://folham.s3.us-east-2.amazonaws.com/system_architecture-technical+system+arch.drawio.png" width="720" alt="Technical deployment architecture"><img src="https://folham.s3.us-east-2.amazonaws.com/system_architecture-technical+system+arch.drawio.png" width="720" alt="Bits technical deployment architecture" /></a>
 </p>
 
 ## To run tests on your local machine
